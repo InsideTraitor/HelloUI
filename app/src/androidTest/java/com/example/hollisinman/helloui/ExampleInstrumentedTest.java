@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("com.example.hollisinman.helloui", appContext.getPackageName());
+        assertEquals("com.example.hollisinman.com.droidrocks.demos.helloui", appContext.getPackageName());
     }
 }
