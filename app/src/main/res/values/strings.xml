@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">HelloUI</string>
+    <string name="foo">foo</string>
+    <string name="bar">bar</string>
+    <string name="go_back">Go Back</string>
+    <string name="et_email_hint">enter your email...</string>
+    <string name="et_password_hint">******</string>
+</resources>
