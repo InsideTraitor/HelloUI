@@ -118,7 +118,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener{
 
                     // Create a new Intent and provide this (Login) as the Context and HomePage.class as the destination Activity
                     Intent homepage = new Intent(this, HomePage.class);
-                    // Start an Activity by passing an Intent
+//                    // Start an Activity by passing an Intent
                     startActivity(homepage);
 
                 } else if (emailEmpty) { // et_email is empty
