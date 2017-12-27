@@ -12,6 +12,11 @@ import android.widget.Toast;
 
 import com.example.hollisinman.helloui.R;
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
 // Class Login extends abstract class AppCompatActivity and implements interface View.OnClickListener
 public class Login extends AppCompatActivity implements View.OnClickListener{
 
@@ -19,8 +24,10 @@ public class Login extends AppCompatActivity implements View.OnClickListener{
     private EditText et_email;
     private EditText et_password;
     private Button btn_login;
+    private Map<String, String> allowed = new HashMap<>();
+    private Set<String> banned = new HashSet<>();
 
-    // This is the entry point for our Activity's lifecycle
+    // This is the entry point for our Activity's lifecycle - this always comes before "onStart()"
     // Set up any resources we can before the application becomes visible to the user
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +38,15 @@ public class Login extends AppCompatActivity implements View.OnClickListener{
         et_email = findViewById(R.id.email);
         et_password = findViewById(R.id.password);
         btn_login = findViewById(R.id.btn_login);
+
+        // Fill the @param allowed HashMap with some "valid" credentials
+        allowed.put("inman.hollis@gmail.com", "123");
+        allowed.put("hollis@droid.rocks", "123");
+        allowed.put("kevin.walker@droid.rocks", "123");
+
+        // Fill the @param banned HashSet with some "forbidden" emails - use a "Set" because checking the pw of a banned user is pointless, right?
+        banned.add("hacker@gmail.com");
+        banned.add("badguy@gmail.com");
 
         // Attach "this" OnClickListener - the Activity's implementation of View.OnClickListener
         et_email.setOnClickListener(this);
@@ -111,16 +127,21 @@ public class Login extends AppCompatActivity implements View.OnClickListener{
                 boolean passwordEmpty = isEditTextEmpty(et_password);
 
                 // Validate user input
-                // Check the condition we're looking for first, then check to see what's wrong if our condition isn't met
-                if (!emailEmpty && !passwordEmpty) {
-                    // Create a Toast message (pop-up) that tells the user we're launching the Homepage
-                    Toast.makeText(getApplicationContext(), "Launching HomePage Activity", Toast.LENGTH_SHORT).show();
-
-                    // Create a new Intent and provide this (Login) as the Context and HomePage.class as the destination Activity
-                    Intent homepage = new Intent(this, HomePage.class);
-//                    // Start an Activity by passing an Intent
-                    startActivity(homepage);
-
+                if (!emailEmpty && !passwordEmpty) { // Make sure the user has entered a username and password
+                    // Check to see if the user is in "banned"
+                    if (banned.contains(et_email.getText().toString())) { // evaluates as "true" if the we find the user's et_email input as a key in "banned"
+                        Toast.makeText(getApplicationContext(), "Feel the wrath of the BAN HAMMER!!!", Toast.LENGTH_SHORT).show();
+                    } else if (allowed.get(et_email.getText().toString()).equals(et_password.getText().toString())) { // Username isn't in "banned" let's check to see if it's in "allowed"
+                        // Create a Toast message (pop-up) that tells the user we're launching the Homepage
+                        Toast.makeText(getApplicationContext(), "Launching HomePage Activity", Toast.LENGTH_SHORT).show();
+                        // Create a new Intent and provide this (Login) as the Context and HomePage.class as the destination Activity
+                        Intent homepage = new Intent(this, HomePage.class);
+                        // Start an Activity by passing an Intent
+                        startActivity(homepage);
+                    } else { // We could not find and/or validate the credentials entered on the "allowed" list, prompt user to register
+                        Toast.makeText(getApplicationContext(), "Please register before attempting to login", Toast.LENGTH_SHORT).show();
+                    }
+                    // Check if the username and password entered exist in "allowed"
                 } else if (emailEmpty) { // et_email is empty
                     Toast.makeText(getApplicationContext(), "Your email field is blank", Toast.LENGTH_SHORT).show();
                 } else if (passwordEmpty) { // et_password is empty
