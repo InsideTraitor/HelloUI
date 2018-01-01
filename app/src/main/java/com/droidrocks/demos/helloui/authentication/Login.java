@@ -1,5 +1,5 @@
 // The package statement for the Login class
-package com.droidrocks.demos.helloui;
+package com.droidrocks.demos.helloui.authentication;
 
 // These are the Classes we're importing from their respective packages
 import android.content.Intent;
@@ -8,14 +8,12 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.droidrocks.demos.helloui.general.Calculator;
+import com.droidrocks.demos.helloui.general.HomePage;
 import com.example.hollisinman.helloui.R;
-
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
 
 // Class Login extends abstract class AppCompatActivity and implements interface View.OnClickListener
 public class Login extends AppCompatActivity implements View.OnClickListener{
@@ -23,9 +21,8 @@ public class Login extends AppCompatActivity implements View.OnClickListener{
     // Define the fields for our Class - Class Variables aka Instance Variables
     private EditText et_email;
     private EditText et_password;
+    private TextView txt_forgot_password;
     private Button btn_login;
-    private Map<String, String> allowed = new HashMap<>();
-    private Set<String> banned = new HashSet<>();
 
     // This is the entry point for our Activity's lifecycle - this always comes before "onStart()"
     // Set up any resources we can before the application becomes visible to the user
@@ -35,23 +32,17 @@ public class Login extends AppCompatActivity implements View.OnClickListener{
         setContentView(R.layout.activity_login);
 
         // Find our Views so the corresponding objects we've declared can be inflated
-        et_email = findViewById(R.id.email);
-        et_password = findViewById(R.id.password);
+        et_email = findViewById(R.id.et_email);
+        et_password = findViewById(R.id.et_password);
         btn_login = findViewById(R.id.btn_login);
-
-        // Fill the @param allowed HashMap with some "valid" credentials
-        allowed.put("inman.hollis@gmail.com", "123");
-        allowed.put("hollis@droid.rocks", "123");
-        allowed.put("kevin.walker@droid.rocks", "123");
-
-        // Fill the @param banned HashSet with some "forbidden" emails - use a "Set" because checking the pw of a banned user is pointless, right?
-        banned.add("hacker@gmail.com");
-        banned.add("badguy@gmail.com");
+        txt_forgot_password = findViewById(R.id.txt_forgot_password);
 
         // Attach "this" OnClickListener - the Activity's implementation of View.OnClickListener
         et_email.setOnClickListener(this);
         et_password.setOnClickListener(this);
         btn_login.setOnClickListener(this);
+        txt_forgot_password.setOnClickListener(this);
+
     }
 
     // Called after directly after onCreate() or after onRestart() (In the event that the Activity was stopped and is restarting)
@@ -112,11 +103,11 @@ public class Login extends AppCompatActivity implements View.OnClickListener{
         // We can't switch on the type "View" directly because it is not an acceptable argument for switch()
         switch (view.getId()) {
             // Since we're not doing anything when these views are clicked, we have them here simply to show they can be accessed
-            case R.id.email:
+            case R.id.et_email:
                 // Do nothing
                 break; // ends the case
 
-            case R.id.password:
+            case R.id.et_password:
                 // Do nothing
                 break;
 
@@ -129,17 +120,23 @@ public class Login extends AppCompatActivity implements View.OnClickListener{
                 // Validate user input
                 if (!emailEmpty && !passwordEmpty) { // Make sure the user has entered a username and password
                     // Check to see if the user is in "banned"
-                    if (banned.contains(et_email.getText().toString())) { // evaluates as "true" if the we find the user's et_email input as a key in "banned"
+                    if (AppAccess.getInstance().getBanned().contains(et_email.getText().toString())) { // evaluates as "true" if the we find the user's et_email input as a key in "banned"
                         Toast.makeText(getApplicationContext(), "Feel the wrath of the BAN HAMMER!!!", Toast.LENGTH_SHORT).show();
-                    } else if (allowed.get(et_email.getText().toString()).equals(et_password.getText().toString())) { // Username isn't in "banned" let's check to see if it's in "allowed"
-                        // Create a Toast message (pop-up) that tells the user we're launching the Homepage
-                        Toast.makeText(getApplicationContext(), "Launching HomePage Activity", Toast.LENGTH_SHORT).show();
-                        // Create a new Intent and provide this (Login) as the Context and HomePage.class as the destination Activity
-                        Intent homepage = new Intent(this, HomePage.class);
-                        // Start an Activity by passing an Intent
-                        startActivity(homepage);
+                    } else if (AppAccess.getInstance().getAllowed().containsKey(et_email.getText().toString())) { // Username isn't in "banned" let's check to see if it's in "allowed"
+                        if (AppAccess.getInstance().getAllowed().get(et_email.getText().toString()).equals(et_password.getText().toString())) {
+                            // Create a Toast message (pop-up) that tells the user we're launching the Homepage
+                            Toast.makeText(getApplicationContext(), "Launching HomePage Activity", Toast.LENGTH_SHORT).show();
+                            // Create a new Intent and provide this (Login) as the Context and Calculator.class as the destination Activity
+                            Intent homepage = new Intent(this, HomePage.class);
+                            // Start an Activity by passing an Intent
+                            startActivity(homepage);
+                        } else {
+                            Toast.makeText(getApplicationContext(), "Incorrect Password", Toast.LENGTH_SHORT).show();
+                        }
                     } else { // We could not find and/or validate the credentials entered on the "allowed" list, prompt user to register
                         Toast.makeText(getApplicationContext(), "Please register before attempting to login", Toast.LENGTH_SHORT).show();
+                        Intent register = new Intent(getApplicationContext(), Registration.class);
+                        startActivity(register);
                     }
                     // Check if the username and password entered exist in "allowed"
                 } else if (emailEmpty) { // et_email is empty
@@ -150,6 +147,11 @@ public class Login extends AppCompatActivity implements View.OnClickListener{
                     Toast.makeText(getApplicationContext(), "This will never be executed", Toast.LENGTH_SHORT).show();
                 }
                 break;
-        } // Closes switch(view.getId()
+
+            case R.id.txt_forgot_password:
+                Intent forgotPassword = new Intent(getApplicationContext(), ForgotPassword.class);
+                startActivity(forgotPassword);
+                break;
+        } // Closes switch(view.getId())
     } // Closes onClick(View view)
 } // Closes Login

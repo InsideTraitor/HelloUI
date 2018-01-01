@@ -1,4 +1,4 @@
-package com.droidrocks.demos.helloui;
+package com.droidrocks.demos.helloui.general;
 
 /**
  * Created by hollisinman on 12/19/17.
