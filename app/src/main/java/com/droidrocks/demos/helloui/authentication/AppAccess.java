@@ -1,8 +1,5 @@
 package com.droidrocks.demos.helloui.authentication;
 
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
-
 import java.util.HashMap;
 import java.util.HashSet;
 

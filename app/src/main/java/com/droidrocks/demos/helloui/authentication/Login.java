@@ -11,7 +11,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.droidrocks.demos.helloui.general.Calculator;
 import com.droidrocks.demos.helloui.general.HomePage;
 import com.example.hollisinman.helloui.R;
 
