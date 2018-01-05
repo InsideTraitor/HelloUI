@@ -48,28 +48,28 @@ public class Registration extends AppCompatActivity implements View.OnClickListe
                                 // Register user
                                 if (checkPasswordLength(password) && checkPasswordLength(confirmPassword)) {
                                     AppAccess.getInstance().getAllowed().put(username.getText().toString(), password.getText().toString());
-                                    Toast.makeText(getApplicationContext(), "You are now registered", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getString(R.string.registration_success), Toast.LENGTH_SHORT).show();
                                     // Return newly registered user back to Login
                                     startActivity(new Intent(getApplicationContext(), Login.class));
                                 }
                             // User's passwords do not match
                             } else {
-                                Toast.makeText(getApplicationContext(), "Your passwords do not match", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getString(R.string.registration_password_mismatch), Toast.LENGTH_SHORT).show();
                             }
                         } else {
                             // Alert user they have already registered (they are on the allowed HashMap)
-                            Toast.makeText(getApplicationContext(), "You have already registered this email", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getString(R.string.registration_already_registered), Toast.LENGTH_SHORT).show();
                         }
                     } else {
                         // Alert user they are not allowed to register as their email already appears on the banned HashSet
-                        Toast.makeText(getApplicationContext(), "The email you entered is banned from this app", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getString(R.string.registration_email_banned), Toast.LENGTH_SHORT).show();
                     }
                 } else if (username.getText().toString().isEmpty()) {
-                    Toast.makeText(getApplicationContext(), "Please enter your email as a username", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getString(R.string.registration_username_empty), Toast.LENGTH_SHORT).show();
                 } else if (password.getText().toString().isEmpty()) {
-                    Toast.makeText(getApplicationContext(), "Please supply a password", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getString(R.string.registration_password_empty), Toast.LENGTH_SHORT).show();
                 } else if (confirmPassword.getText().toString().isEmpty()) {
-                    Toast.makeText(getApplicationContext(), "Please confirm your password", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getString(R.string.registration_confirm_password_empty), Toast.LENGTH_SHORT).show();
                 }
                 break;
         }
@@ -81,9 +81,9 @@ public class Registration extends AppCompatActivity implements View.OnClickListe
         boolean pass = false;
 
         if (minLength > passwordField.getText().toString().length()) {
-            Toast.makeText(this, "Your password needs to be longer than 7 characters", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getApplicationContext().getResources().getString(R.string.registration_password_short), Toast.LENGTH_SHORT).show();
         } else if (maxLength < passwordField.getText().toString().length()) {
-            Toast.makeText(this, "Your password needs to be less than 16 characters", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getApplicationContext().getResources().getString(R.string.registration_password_long), Toast.LENGTH_SHORT).show();
         } else {
             pass = true;
         }

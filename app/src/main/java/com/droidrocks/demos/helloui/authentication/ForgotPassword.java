@@ -33,7 +33,7 @@ public class ForgotPassword extends AppCompatActivity implements View.OnClickLis
                 emailImplicitIntent(et_email.getText().toString(), "Droid Rocks Password Reminder", "Your password is: " + AppAccess.getInstance().getAllowed().get(et_email.getText().toString()), "Choose app to send your password:");
 //                Toast.makeText(getApplicationContext(), "Your password is: " + AppAccess.getInstance().getAllowed().get(et_email.getText().toString()), Toast.LENGTH_LONG).show();
             } else {
-                Toast.makeText(getApplicationContext(), "Sorry, that email is not registered", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Sorry, that email is not valid", Toast.LENGTH_SHORT).show();
             }
         } else {
             Toast.makeText(getApplicationContext(), "You must enter an email to retrieve your password", Toast.LENGTH_SHORT).show();
