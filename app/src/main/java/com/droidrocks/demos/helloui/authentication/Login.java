@@ -2,29 +2,17 @@
 package com.droidrocks.demos.helloui.authentication;
 
 // These are the Classes we're importing from their respective packages
-import android.app.DownloadManager;
 import android.content.Intent;
-import android.os.AsyncTask;
-import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.droidrocks.demos.helloui.general.HomePage;
 import com.example.hollisinman.helloui.R;
-
-import java.io.BufferedInputStream;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.URL;
-import java.net.URLConnection;
 
 // Class Login extends abstract class AppCompatActivity and implements interface View.OnClickListener
 public class Login extends AppCompatActivity implements View.OnClickListener{
@@ -53,10 +41,6 @@ public class Login extends AppCompatActivity implements View.OnClickListener{
         et_password.setOnClickListener(this);
         btn_login.setOnClickListener(this);
         txt_forgot_password.setOnClickListener(this);
-
-        GetProfileAsyncTask startProfileDownload = new GetProfileAsyncTask();
-        startProfileDownload.execute("http://ipv4.download.thinkbroadband.com/5MB.zip");
-
     }
 
     // Called after directly after onCreate() or after onRestart() (In the event that the Activity was stopped and is restarting)
@@ -168,75 +152,4 @@ public class Login extends AppCompatActivity implements View.OnClickListener{
                 break;
         } // Closes switch(view.getId())
     } // Closes onClick(View view)
-
-    private class GetProfileAsyncTask extends AsyncTask<String, String, String> {
-
-        ProgressBar downloadProgress = new ProgressBar(getApplicationContext());
-
-        /**
-         * Before starting background thread
-         * */
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            System.out.println("Starting download");
-
-            downloadProgress.setIndeterminate(false);
-            downloadProgress.postInvalidate();
-        }
-
-        /**
-         * Downloading file in background thread
-         * */
-        @Override
-        protected String doInBackground(String... f_url) {
-            int count;
-            try {
-                String root = Environment.getExternalStorageDirectory().toString();
-
-                System.out.println("Downloading");
-                URL url = new URL(f_url[0]);
-
-                URLConnection connection = url.openConnection();
-                connection.connect();
-
-                // input stream to read file - with 8k buffer
-                InputStream input = new BufferedInputStream(url.openStream(), 8192);
-
-                // Output stream to write file
-
-                OutputStream output = new FileOutputStream(root+"/downloadedfile.jpg");
-                byte data[] = new byte[1024];
-
-                long total = 0;
-                while ((count = input.read(data)) != -1) {
-                    total += count;
-
-                    // writing data to file
-                    output.write(data, 0, count);
-                }
-
-                // flushing output
-                output.flush();
-
-                // closing streams
-                output.close();
-                input.close();
-
-            } catch (Exception e) {
-                Log.e("Error: ", e.getMessage());
-            }
-
-            return null;
-        }
-
-        /**
-         * After completing background task
-         * **/
-        @Override
-        protected void onPostExecute(String file_url) {
-            System.out.println("Downloaded");
-        }
-    }
-
 } // Closes Login
