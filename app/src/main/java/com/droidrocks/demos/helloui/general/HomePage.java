@@ -101,7 +101,7 @@ public class HomePage extends AppCompatActivity {
                      Read no more than "numBytesRead", which will be equal to the number of bytes actually read in the while statement above
                       */
                     output.write(buffer, 0, numBytesRead);
-                    updateProgress(numBytesRead);
+                    updateProgressBar(numBytesRead);
                 }
 
                 // Flushing output - forces any remaining bytes in the FileOutputStream buffer to be written
@@ -151,7 +151,7 @@ public class HomePage extends AppCompatActivity {
             return isIndeterminate;
         }
 
-        private void updateProgress(int bytesRead) {
+        private void updateProgressBar(int bytesRead) {
             bytesDownloaded += bytesRead;
             progressBar.setProgress((downloadSize / bytesDownloaded) * 100);
         }
