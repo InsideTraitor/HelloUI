@@ -17,7 +17,13 @@
         <activity android:name="com.droidrocks.demos.helloui.general.Calculator" />
         <activity android:name="com.droidrocks.demos.helloui.authentication.Registration" />
         <activity android:name="com.droidrocks.demos.helloui.authentication.ForgotPassword" />
-        <activity android:name="com.droidrocks.demos.helloui.general.HomePage" />
+        <activity android:name="com.droidrocks.demos.helloui.general.HomePage">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>
