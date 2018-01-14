@@ -8,9 +8,25 @@
     tools:context="com.droidrocks.demos.helloui.RxJavaExampleActivity">
 
     <EditText
-        android:id="@+id/my_edit_text"
+        android:id="@+id/username_edit_text"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:hint="username"
+        />
+
+    <EditText
+        android:id="@+id/password_edit_text1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="password"
+        />
+
+    <EditText
+        android:id="@+id/password_edit_text2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="password again"
+        />
 
     <Button
         android:id="@+id/submit_button"
