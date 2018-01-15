@@ -1,6 +1,7 @@
 package com.droidrocks.demos.helloui.general;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -33,7 +34,7 @@ public class NavDrawer extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private ImageView profilePicture;
-    private static final String HOMEPAGE_TAG = "HomePage";
+    private static final String NAVDRAWER_TAG = "NavDrawer";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +61,7 @@ public class NavDrawer extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        Log.d(HOMEPAGE_TAG, "Hello from onCreate()");
+        Log.d(NAVDRAWER_TAG, "Hello from onCreate()");
 
         profilePicture = findViewById(R.id.iv_profilePicture);
 
@@ -107,7 +108,7 @@ public class NavDrawer extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_camera) {
-            // Handle the camera action
+            startActivity(new Intent(this, RxJava.class));
         } else if (id == R.id.nav_gallery) {
 
         } else if (id == R.id.nav_slideshow) {
@@ -153,7 +154,7 @@ public class NavDrawer extends AppCompatActivity
                 // Create the File we're going to write to
                 profilePictureFile = new File(profilePictureFilePath);
             } catch (Exception e) {
-                Log.e(HOMEPAGE_TAG, e.getMessage());
+                Log.e(NAVDRAWER_TAG, e.getMessage());
             }
         }
 
@@ -247,7 +248,7 @@ public class NavDrawer extends AppCompatActivity
             try {
                 url = new URL(stringURL);
             } catch (MalformedURLException e) {
-                Log.e(HOMEPAGE_TAG, e.getMessage());
+                Log.e(NAVDRAWER_TAG, e.getMessage());
             }
             return url;
         }
@@ -265,7 +266,7 @@ public class NavDrawer extends AppCompatActivity
                     connection.connect();
                     contentLength = connection.getContentLength();
                 } catch (Exception e) {
-                    Log.e(HOMEPAGE_TAG, e.getMessage());
+                    Log.e(NAVDRAWER_TAG, e.getMessage());
                 }
             }
 
