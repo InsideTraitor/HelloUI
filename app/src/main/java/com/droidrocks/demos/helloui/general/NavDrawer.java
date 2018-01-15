@@ -66,7 +66,7 @@ public class NavDrawer extends AppCompatActivity
         profilePicture = findViewById(R.id.iv_profilePicture);
 
         NavDrawer.GetProfileAsyncTask startProfileDownload = new GetProfileAsyncTask(getApplicationContext());
-        startProfileDownload.execute("https://dummyimage.com/200x200/000/fff&text=YOLO!!!");
+        startProfileDownload.execute("https://dummyimage.com/200x200/000/fff&text=Break Yo Self!!!");
     }
 
     @Override
