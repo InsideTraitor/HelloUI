@@ -21,7 +21,7 @@
         <activity android:name="com.droidrocks.demos.helloui.general.Calculator" />
         <activity android:name="com.droidrocks.demos.helloui.authentication.Registration" />
         <activity android:name="com.droidrocks.demos.helloui.authentication.ForgotPassword" />
-        <activity android:name="com.droidrocks.demos.helloui.general.HomePage"></activity>
+        <activity android:name="com.droidrocks.demos.helloui.general.HomePage" />
         <activity
             android:name="com.droidrocks.demos.helloui.general.NavDrawer"
             android:label="@string/title_activity_nav_drawer"
@@ -31,6 +31,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.droidrocks.demos.helloui.general.NavDrawer" />
         </activity>
+        <activity android:name="com.droidrocks.demos.helloui.general.RxJava"></activity>
     </application>
 
 </manifest>
