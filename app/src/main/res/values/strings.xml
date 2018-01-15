@@ -29,4 +29,10 @@
     <string name="registration_confirm_password_empty">Please confirm your password</string>
     <string name="registration_password_short">Your password needs to be longer than 7 characters</string>
     <string name="registration_password_long">Your password needs to be less than 16 characters</string>
+    <string name="title_activity_nav_drawer">NavDrawer</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
 </resources>

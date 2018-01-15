@@ -12,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.droidrocks.demos.helloui.general.HomePage;
+import com.droidrocks.demos.helloui.general.NavDrawer;
 import com.example.hollisinman.helloui.R;
 
 // Class Login extends abstract class AppCompatActivity and implements interface View.OnClickListener
@@ -125,7 +126,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener{
                             // Create a Toast message (pop-up) that tells the user we're launching the Homepage
                             Toast.makeText(getApplicationContext(), "Login successful", Toast.LENGTH_SHORT).show();
                             // Create a new Intent and provide this (Login) as the Context and Calculator.class as the destination Activity
-                            Intent homepage = new Intent(this, HomePage.class);
+                            Intent homepage = new Intent(this, NavDrawer.class);
                             // Start an Activity by passing an Intent
                             startActivity(homepage);
                         } else {
