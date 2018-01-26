@@ -2,12 +2,18 @@ package com.droidrocks.demos.helloui.general;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -19,8 +25,16 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
+import com.droidrocks.demos.helloui.authentication.Login;
+import com.droidrocks.demos.helloui.notifications.AlertDialogFragment;
 import com.example.hollisinman.helloui.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -29,12 +43,15 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.Random;
 
 public class NavDrawer extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, AlertDialogFragment.AlertDialogFragmentInteractionListener {
+
+    static final int REQUEST_IMAGE_CAPTURE = 1;
 
     private ImageView profilePicture;
-    private static final String NAVDRAWER_TAG = "NavDrawer";
+    private static final String TAG_NAVDRAWER = "TAG_NAVDRAWER";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,12 +78,69 @@ public class NavDrawer extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        Log.d(NAVDRAWER_TAG, "Hello from onCreate()");
-
         profilePicture = findViewById(R.id.iv_profilePicture);
 
-        NavDrawer.GetProfileAsyncTask startProfileDownload = new GetProfileAsyncTask(getApplicationContext());
-        startProfileDownload.execute("https://dummyimage.com/200x200/000/fff&text=Break Yo Self!!!");
+        profilePicture.setImageURI(Uri.parse(getFilesDir().getAbsolutePath() + "/" + getFirebaseUser().getPhotoUrl()));
+    }
+
+    private FirebaseUser getFirebaseUser() {
+        return FirebaseAuth.getInstance().getCurrentUser();
+    }
+
+    private void updateUserPhoto(File file, FirebaseUser firebaseUser) {
+        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                .setPhotoUri(Uri.parse(file.getName()))
+                .build();
+
+        firebaseUser.updateProfile(profileUpdates)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            Log.d(TAG_NAVDRAWER, "User profile updated.");
+                            Toast.makeText(NavDrawer.this, "Saved new profile photo", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+    }
+
+    private void refreshProfilePicture(Bitmap bitmap) {
+        profilePicture.setImageBitmap(bitmap);
+    }
+
+    private File saveProfilePicture(Bitmap bitmap) {
+        String filename = getFilesDir().getAbsolutePath() + "/" + getFirebaseUser().getUid() + "_profile_picture.png";
+        File dest = new File(filename);
+
+        try {
+            FileOutputStream out = new FileOutputStream(dest);
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
+            out.flush();
+            out.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return dest;
+    }
+
+    private void dispatchTakePictureIntent() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+        }
+    }
+
+    // Save the new profile picture
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            Bundle extras = data.getExtras();
+            Bitmap imageBitmap = (Bitmap) extras.get("data");
+            refreshProfilePicture(imageBitmap);
+            File file = saveProfilePicture(imageBitmap);
+            updateUserPhoto(file, getFirebaseUser());
+        }
     }
 
     @Override
@@ -75,7 +149,7 @@ public class NavDrawer extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            AlertDialogFragment.newInstance().show(getSupportFragmentManager(), "AlertDialogFrag");
         }
     }
 
@@ -94,7 +168,9 @@ public class NavDrawer extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_log_off) {
+            AlertDialogFragment logOffFragment = AlertDialogFragment.newInstance();
+            AlertDialogFragment.newInstance().show(getSupportFragmentManager(), "AlertDialogFrag");
             return true;
         }
 
@@ -108,7 +184,7 @@ public class NavDrawer extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_camera) {
-            startActivity(new Intent(this, RxJava.class));
+           dispatchTakePictureIntent();
         } else if (id == R.id.nav_gallery) {
 
         } else if (id == R.id.nav_slideshow) {
@@ -124,6 +200,17 @@ public class NavDrawer extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void onPositiveClick() {
+        FirebaseAuth.getInstance().signOut();
+        startActivity(new Intent(NavDrawer.this, Login.class));
+    }
+
+    @Override
+    public void onNegativeClick() {
+        // No implementation
     }
 
     private class GetProfileAsyncTask extends AsyncTask<String, Integer, String> {
@@ -154,7 +241,7 @@ public class NavDrawer extends AppCompatActivity
                 // Create the File we're going to write to
                 profilePictureFile = new File(profilePictureFilePath);
             } catch (Exception e) {
-                Log.e(NAVDRAWER_TAG, e.getMessage());
+                Log.e(TAG_NAVDRAWER, e.getMessage());
             }
         }
 
@@ -248,7 +335,7 @@ public class NavDrawer extends AppCompatActivity
             try {
                 url = new URL(stringURL);
             } catch (MalformedURLException e) {
-                Log.e(NAVDRAWER_TAG, e.getMessage());
+                Log.e(TAG_NAVDRAWER, e.getMessage());
             }
             return url;
         }
@@ -266,7 +353,7 @@ public class NavDrawer extends AppCompatActivity
                     connection.connect();
                     contentLength = connection.getContentLength();
                 } catch (Exception e) {
-                    Log.e(NAVDRAWER_TAG, e.getMessage());
+                    Log.e(TAG_NAVDRAWER, e.getMessage());
                 }
             }
 
@@ -277,6 +364,8 @@ public class NavDrawer extends AppCompatActivity
                 return 0;
             }
         }
+
+
 
     }
 }

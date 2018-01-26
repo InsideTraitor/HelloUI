@@ -5,6 +5,9 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.SET_ANIMATION_SCALE"/>
 
+    <uses-feature android:name="android.hardware.camera"
+        android:required="true" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -32,7 +35,9 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.droidrocks.demos.helloui.general.NavDrawer" />
         </activity>
-        <activity android:name="com.droidrocks.demos.helloui.general.RxJava"></activity>
+        <activity android:name="com.droidrocks.demos.helloui.general.RxJava">
+
+        </activity>
     </application>
 
 </manifest>
