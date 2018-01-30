@@ -29,6 +29,9 @@
     <string name="registration_username_empty">Please enter your email as a username</string>
     <string name="registration_password_empty">Please supply a password</string>
     <string name="registration_confirm_password_empty">Please confirm your password</string>
+    <string name="registration_weak_password">Your password is weak</string>
+    <string name="registration_invalid_credentials">Invalid credentials</string>
+    <string name="registration_user_collision">Your credentials are tied to another account</string>
     <string name="registration_password_short">Your password needs to be longer than 7 characters</string>
     <string name="registration_password_long">Your password needs to be less than 16 characters</string>
     <string name="title_activity_nav_drawer">NavDrawer</string>

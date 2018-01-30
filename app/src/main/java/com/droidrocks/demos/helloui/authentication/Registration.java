@@ -15,6 +15,9 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
+import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
 
 public class Registration extends AppCompatActivity implements View.OnClickListener {
@@ -69,10 +72,21 @@ public class Registration extends AppCompatActivity implements View.OnClickListe
                                     Toast.LENGTH_SHORT).show();
                             startActivity(new Intent(Registration.this, Login.class));
                         } else {
-                            // If sign in fails, display a message to the user.
-                            Log.w(TAG_REGISTRATION, "createUserWithEmail:failure", task.getException());
-                            Toast.makeText(Registration.this, R.string.registration_failure,
-                                    Toast.LENGTH_SHORT).show();
+                            try {
+                                throw task.getException();
+                            } catch(FirebaseAuthWeakPasswordException e) {
+                                Toast.makeText(Registration.this, R.string.registration_weak_password,
+                                        Toast.LENGTH_SHORT).show();
+                            } catch(FirebaseAuthInvalidCredentialsException e) {
+                                Toast.makeText(Registration.this, R.string.registration_invalid_credentials,
+                                        Toast.LENGTH_SHORT).show();
+                            } catch(FirebaseAuthUserCollisionException e) {
+                                Toast.makeText(Registration.this, R.string.registration_user_collision,
+                                        Toast.LENGTH_SHORT).show();
+                            } catch(Exception e) {
+                                Log.e(TAG_REGISTRATION, e.getMessage());
+                            }
+
                         }
                     }
                 });
@@ -104,7 +118,6 @@ public class Registration extends AppCompatActivity implements View.OnClickListe
                         // Register user
                         if (checkPasswordLength(password) && checkPasswordLength(confirmPassword)) {
                             createAccount(username.getText().toString(), password.getText().toString());
-                            Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getString(R.string.registration_success), Toast.LENGTH_SHORT).show();
                             // Return newly registered user back to Login
                             startActivity(new Intent(getApplicationContext(), Login.class));
                         }

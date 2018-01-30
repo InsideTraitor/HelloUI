@@ -15,6 +15,8 @@ import android.widget.Toast;
 
 import com.example.hollisinman.helloui.R;
 
+import java.net.MalformedURLException;
+
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
@@ -22,11 +24,18 @@ import com.example.hollisinman.helloui.R;
  * to handle interaction events.
  * Use the {@link AlertDialogFragment#newInstance} factory method to
  * create an instance of this fragment.
+ *
+ *
+ * Usage requires a TYPE and DIALOG_MESSAGE
  */
 public class AlertDialogFragment extends DialogFragment {
 
     private AlertDialogFragmentInteractionListener mListener;
-    private Bundle bundle;
+    public static final String TYPE = "type";
+    public static final String DIALOG_MESSAGE = "dialogMessage";
+    public static final String ALERT_DIALOG_TYPE_EDIT_PROFILE_PICTURE = "editProfilePicture";
+    public static final String ALERT_DIALOG_TYPE_LOGOFF = "logOff";
+    public static final String TAG_ALERT_DIALOG_FRAGMENT = "AlertDialog";
 
     public AlertDialogFragment() {
         // Required empty public constructor
@@ -38,24 +47,42 @@ public class AlertDialogFragment extends DialogFragment {
      *
      * @return A new instance of fragment AlertDialogFragment.
      */
-    public static AlertDialogFragment newInstance() {
+    public static AlertDialogFragment newInstance(Bundle bundle) {
         AlertDialogFragment fragment = new AlertDialogFragment();
+        fragment.setArguments(bundle);
         return fragment;
     }
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+
+        final String type = getArguments().getString(TYPE);
+
         // Use the Builder class for convenient dialog construction
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setMessage("You up out dis bitch?")
-                .setPositiveButton("Fo' sho", new DialogInterface.OnClickListener() {
+        builder.setMessage(getArguments().getString(DIALOG_MESSAGE))
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        mListener.onPositiveClick();
+                        switch (type) {
+                            case ALERT_DIALOG_TYPE_EDIT_PROFILE_PICTURE:
+                                mListener.changeProfilePicture();
+                                break;
+                            case ALERT_DIALOG_TYPE_LOGOFF:
+                                mListener.logOff();
+                                break;
+                        }
                     }
                 })
-                .setNegativeButton("Nah", new DialogInterface.OnClickListener() {
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        mListener.onNegativeClick();
+                        switch (type) {
+                            case ALERT_DIALOG_TYPE_EDIT_PROFILE_PICTURE:
+                                mListener.cancelChangeProfilePicture();
+                                break;
+                            case ALERT_DIALOG_TYPE_LOGOFF:
+                                mListener.cancelLogOff();
+                                break;
+                        }
                     }
                 });
         // Create the AlertDialog object and return it
@@ -104,8 +131,12 @@ public class AlertDialogFragment extends DialogFragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface AlertDialogFragmentInteractionListener {
-        void onPositiveClick();
+        void logOff();
 
-        void onNegativeClick();
+        void cancelLogOff();
+
+        void changeProfilePicture();
+
+        void cancelChangeProfilePicture();
     }
 }

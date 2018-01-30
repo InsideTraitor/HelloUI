@@ -3,17 +3,14 @@ package com.droidrocks.demos.helloui.general;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -43,12 +40,12 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.Random;
 
 public class NavDrawer extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, AlertDialogFragment.AlertDialogFragmentInteractionListener {
 
     static final int REQUEST_IMAGE_CAPTURE = 1;
+
 
     private ImageView profilePicture;
     private static final String TAG_NAVDRAWER = "TAG_NAVDRAWER";
@@ -81,6 +78,16 @@ public class NavDrawer extends AppCompatActivity
         profilePicture = findViewById(R.id.iv_profilePicture);
 
         profilePicture.setImageURI(Uri.parse(getFilesDir().getAbsolutePath() + "/" + getFirebaseUser().getPhotoUrl()));
+
+        profilePicture.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Bundle alertMessage = new Bundle();
+                alertMessage.putString(AlertDialogFragment.DIALOG_MESSAGE, "Are you sure you want to change your profile picture?");
+                alertMessage.putString(AlertDialogFragment.TYPE, AlertDialogFragment.ALERT_DIALOG_TYPE_EDIT_PROFILE_PICTURE);
+                AlertDialogFragment.newInstance(alertMessage).show(getSupportFragmentManager(), AlertDialogFragment.TAG_ALERT_DIALOG_FRAGMENT);
+            }
+        });
     }
 
     private FirebaseUser getFirebaseUser() {
@@ -99,6 +106,9 @@ public class NavDrawer extends AppCompatActivity
                         if (task.isSuccessful()) {
                             Log.d(TAG_NAVDRAWER, "User profile updated.");
                             Toast.makeText(NavDrawer.this, "Saved new profile photo", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Log.d(TAG_NAVDRAWER, "Failed to updated FirebaseUser Profile Picture");
+                            Toast.makeText(NavDrawer.this, "Update failed", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
@@ -108,7 +118,7 @@ public class NavDrawer extends AppCompatActivity
         profilePicture.setImageBitmap(bitmap);
     }
 
-    private File saveProfilePicture(Bitmap bitmap) {
+    private File getProfilePictureFile(Bitmap bitmap) {
         String filename = getFilesDir().getAbsolutePath() + "/" + getFirebaseUser().getUid() + "_profile_picture.png";
         File dest = new File(filename);
 
@@ -138,7 +148,7 @@ public class NavDrawer extends AppCompatActivity
             Bundle extras = data.getExtras();
             Bitmap imageBitmap = (Bitmap) extras.get("data");
             refreshProfilePicture(imageBitmap);
-            File file = saveProfilePicture(imageBitmap);
+            File file = getProfilePictureFile(imageBitmap);
             updateUserPhoto(file, getFirebaseUser());
         }
     }
@@ -149,7 +159,10 @@ public class NavDrawer extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            AlertDialogFragment.newInstance().show(getSupportFragmentManager(), "AlertDialogFrag");
+            Bundle alertMessage = new Bundle();
+            alertMessage.putString(AlertDialogFragment.DIALOG_MESSAGE, "Are you sure you want to log off?");
+            alertMessage.putString(AlertDialogFragment.TYPE, AlertDialogFragment.ALERT_DIALOG_TYPE_LOGOFF);
+            AlertDialogFragment.newInstance(alertMessage).show(getSupportFragmentManager(), AlertDialogFragment.TAG_ALERT_DIALOG_FRAGMENT);
         }
     }
 
@@ -169,8 +182,10 @@ public class NavDrawer extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_log_off) {
-            AlertDialogFragment logOffFragment = AlertDialogFragment.newInstance();
-            AlertDialogFragment.newInstance().show(getSupportFragmentManager(), "AlertDialogFrag");
+            Bundle alertMessage = new Bundle();
+            alertMessage.putString(AlertDialogFragment.DIALOG_MESSAGE, "Are you sure you want to log off?");
+            alertMessage.putString(AlertDialogFragment.TYPE, AlertDialogFragment.ALERT_DIALOG_TYPE_LOGOFF);
+            AlertDialogFragment.newInstance(alertMessage).show(getSupportFragmentManager(), AlertDialogFragment.TAG_ALERT_DIALOG_FRAGMENT);
             return true;
         }
 
@@ -184,7 +199,7 @@ public class NavDrawer extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_camera) {
-           dispatchTakePictureIntent();
+
         } else if (id == R.id.nav_gallery) {
 
         } else if (id == R.id.nav_slideshow) {
@@ -203,13 +218,23 @@ public class NavDrawer extends AppCompatActivity
     }
 
     @Override
-    public void onPositiveClick() {
+    public void logOff() {
         FirebaseAuth.getInstance().signOut();
         startActivity(new Intent(NavDrawer.this, Login.class));
     }
 
     @Override
-    public void onNegativeClick() {
+    public void cancelLogOff() {
+        // No implementation
+    }
+
+    @Override
+    public void changeProfilePicture() {
+        dispatchTakePictureIntent();
+    }
+
+    @Override
+    public void cancelChangeProfilePicture() {
         // No implementation
     }
 
@@ -230,7 +255,7 @@ public class NavDrawer extends AppCompatActivity
 
         /**
          * Before starting background thread
-         * */
+         */
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -247,7 +272,7 @@ public class NavDrawer extends AppCompatActivity
 
         /**
          * Downloading file in background thread
-         * */
+         */
         @Override
         protected String doInBackground(String... stringURL) {
             try {
@@ -304,7 +329,7 @@ public class NavDrawer extends AppCompatActivity
 
         /**
          * After completing background task
-         * **/
+         **/
         @Override
         protected void onPostExecute(String file_url) {
             // Remove the ProgressBar from the layout
@@ -364,7 +389,6 @@ public class NavDrawer extends AppCompatActivity
                 return 0;
             }
         }
-
 
 
     }
