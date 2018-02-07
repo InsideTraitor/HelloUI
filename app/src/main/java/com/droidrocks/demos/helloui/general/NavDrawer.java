@@ -238,6 +238,13 @@ public class NavDrawer extends AppCompatActivity
         // No implementation
     }
 
+    @Override
+    public void makePhoneCall(String phoneNumber) {
+        Intent phoneCall = new Intent(Intent.ACTION_CALL);
+        phoneCall.setData(Uri.parse("tel:" + phoneNumber));
+        startActivity(phoneCall);
+    }
+
     private class GetProfileAsyncTask extends AsyncTask<String, Integer, String> {
 
         ProgressBar progressBar;

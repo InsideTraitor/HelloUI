@@ -3,7 +3,6 @@ package com.droidrocks.demos.helloui.notifications;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
@@ -11,11 +10,8 @@ import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.example.hollisinman.helloui.R;
-
-import java.net.MalformedURLException;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -24,8 +20,8 @@ import java.net.MalformedURLException;
  * to handle interaction events.
  * Use the {@link AlertDialogFragment#newInstance} factory method to
  * create an instance of this fragment.
- *
- *
+ * <p>
+ * <p>
  * Usage requires a TYPE and DIALOG_MESSAGE
  */
 public class AlertDialogFragment extends DialogFragment {
@@ -35,7 +31,8 @@ public class AlertDialogFragment extends DialogFragment {
     public static final String DIALOG_MESSAGE = "dialogMessage";
     public static final String ALERT_DIALOG_TYPE_EDIT_PROFILE_PICTURE = "editProfilePicture";
     public static final String ALERT_DIALOG_TYPE_LOGOFF = "logOff";
-    public static final String TAG_ALERT_DIALOG_FRAGMENT = "AlertDialog";
+    public static final String ALERT_DIALOG_TYPE_PHONE_CALL = "phoneCall";
+    public static final String TAG_ALERT_DIALOG_FRAGMENT = "ALERT_DIALOG";
 
     public AlertDialogFragment() {
         // Required empty public constructor
@@ -58,7 +55,6 @@ public class AlertDialogFragment extends DialogFragment {
 
         final String type = getArguments().getString(TYPE);
 
-        // Use the Builder class for convenient dialog construction
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setMessage(getArguments().getString(DIALOG_MESSAGE))
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
@@ -69,6 +65,9 @@ public class AlertDialogFragment extends DialogFragment {
                                 break;
                             case ALERT_DIALOG_TYPE_LOGOFF:
                                 mListener.logOff();
+                                break;
+                            case ALERT_DIALOG_TYPE_PHONE_CALL:
+                                mListener.makePhoneCall("867-5309");
                                 break;
                         }
                     }
@@ -82,12 +81,15 @@ public class AlertDialogFragment extends DialogFragment {
                             case ALERT_DIALOG_TYPE_LOGOFF:
                                 mListener.cancelLogOff();
                                 break;
+                            default:
+                                // Do nothing
+                                break;
                         }
                     }
                 });
         // Create the AlertDialog object and return it
         return builder.create();
-}
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -138,5 +140,7 @@ public class AlertDialogFragment extends DialogFragment {
         void changeProfilePicture();
 
         void cancelChangeProfilePicture();
+
+        void makePhoneCall(String phoneNumber);
     }
 }
