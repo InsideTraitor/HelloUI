@@ -1,7 +1,9 @@
 package com.droidrocks.demos.helloui.general;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -10,6 +12,8 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -26,6 +30,7 @@ import android.widget.Toast;
 
 import com.droidrocks.demos.helloui.authentication.Login;
 import com.droidrocks.demos.helloui.notifications.AlertDialogFragment;
+import com.droidrocks.demos.helloui.utils.Permissions;
 import com.example.hollisinman.helloui.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -45,6 +50,7 @@ public class NavDrawer extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, AlertDialogFragment.AlertDialogFragmentInteractionListener {
 
     static final int REQUEST_IMAGE_CAPTURE = 1;
+    static final int REQUEST_CALL_PHONE_PERMISSION = 1010;
 
 
     private ImageView profilePicture;
@@ -61,8 +67,7 @@ public class NavDrawer extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                makePhoneCall("");
             }
         });
 
@@ -199,13 +204,14 @@ public class NavDrawer extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_camera) {
-
+            dispatchTakePictureIntent();
         } else if (id == R.id.nav_gallery) {
 
         } else if (id == R.id.nav_slideshow) {
+            startActivity(new Intent(NavDrawer.this, PlaySound.class));
 
-        } else if (id == R.id.nav_manage) {
-
+        } else if (id == R.id.nav_rx_java2) {
+            startActivity(new Intent(NavDrawer.this, RxJava2.class));
         } else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_send) {
@@ -240,9 +246,24 @@ public class NavDrawer extends AppCompatActivity
 
     @Override
     public void makePhoneCall(String phoneNumber) {
-        Intent phoneCall = new Intent(Intent.ACTION_CALL);
-        phoneCall.setData(Uri.parse("tel:" + phoneNumber));
-        startActivity(phoneCall);
+        if (Permissions.checkPermission(NavDrawer.this, Manifest.permission.CALL_PHONE, REQUEST_CALL_PHONE_PERMISSION)) {
+            Intent phoneCall = new Intent(Intent.ACTION_CALL);
+            phoneCall.setData(Uri.parse("tel:" + phoneNumber));
+            startActivity(phoneCall);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int permsRequestCode, String[] permissions, int[] grantResults){
+
+        switch(permsRequestCode){
+
+            case REQUEST_CALL_PHONE_PERMISSION:
+                // Do something
+                break;
+
+        }
+
     }
 
     private class GetProfileAsyncTask extends AsyncTask<String, Integer, String> {

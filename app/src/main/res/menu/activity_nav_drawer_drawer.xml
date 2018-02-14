@@ -15,11 +15,11 @@
         <item
             android:id="@+id/nav_slideshow"
             android:icon="@drawable/ic_menu_slideshow"
-            android:title="n/a" />
+            android:title="Sound Board" />
         <item
-            android:id="@+id/nav_manage"
+            android:id="@+id/nav_rx_java2"
             android:icon="@drawable/ic_menu_manage"
-            android:title="n/a" />
+            android:title="RxJava2" />
     </group>
 
     <item android:title="Communicate">
