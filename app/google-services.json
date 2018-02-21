@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "589366742798",
+    "firebase_url": "https://helloui-fc128.firebaseio.com",
+    "project_id": "helloui-fc128",
+    "storage_bucket": "helloui-fc128.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:589366742798:android:271afbe256c157fd",
+        "android_client_info": {
+          "package_name": "com.droidrocks.demos.helloui"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "589366742798-3c123d3hvfn86h46g12kb98tvua6gpqd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.droidrocks.demos.helloui",
+            "certificate_hash": "5ddbab419bc5a319ee5f315e93cba369a903bc9f"
+          }
+        },
+        {
+          "client_id": "589366742798-o2tq4aibefs57fhn0rmae93j4nbs3e7g.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAVDi0BALg5JPUh58zqcpKBgxtYvbW2sN4"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "589366742798-o2tq4aibefs57fhn0rmae93j4nbs3e7g.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
