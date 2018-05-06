@@ -52,7 +52,6 @@ public class NavDrawer extends AppCompatActivity
     static final int REQUEST_IMAGE_CAPTURE = 1;
     static final int REQUEST_CALL_PHONE_PERMISSION = 1010;
 
-
     private ImageView profilePicture;
     private static final String TAG_NAVDRAWER = "TAG_NAVDRAWER";
 
